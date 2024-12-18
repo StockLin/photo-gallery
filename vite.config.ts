@@ -17,17 +17,21 @@ export default defineConfig({
         name: 'ionicPhotoGalleryPoc',
         short_name: 'PhotoGallery',
         description: 'poc pws ionic framework',
-        start_url: '/tab2',
+        start_url: '.',
         display: 'standalone',
-        icons: [{
-          src: 'favicon.png',
-          sizes: '64x64 32x32 24x24 16x16',
-          type: 'image/png'
-        }],
+        icons: [
+          {
+            src: '/pwa-144x144.png',
+            sizes: '144x144',
+            type: 'image/png',
+            purpose: 'any'
+          },
+        ],
         theme_color: '#ffffff',
         background_color: '#ffffff',
         lang: 'zh-Hant-TW',
-        orientation: 'portrait'
+        orientation: 'portrait',
+        scope: '/'
       }
     })
   ],
