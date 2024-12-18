@@ -21,9 +21,13 @@ export default defineConfig({
         display: 'standalone',
         icons: [{
           src: 'favicon.png',
+          sizes: '64x64 32x32 24x24 16x16',
           type: 'image/png'
         }],
+        theme_color: '#ffffff',
+        background_color: '#ffffff',
         lang: 'zh-Hant-TW',
+        orientation: 'portrait'
       }
     })
   ],
