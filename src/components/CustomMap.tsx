@@ -37,11 +37,10 @@ const API_KEY = import.meta.env.VITE_MAP_API_KEY ?? "";
 // v set markers
 // v add click event
 
-const initalCenter = { lat: 22.54992, lng: 0 };
-// {
-//   lat: 24.997725,
-//   lng: 121.457211,
-// }
+const initalCenter = {
+  lat: 24.997725,
+  lng: 121.457211,
+};
 
 const CustomMap: React.FC = () => {
   const MAP_ID = "map01";
@@ -94,17 +93,17 @@ const CustomMap: React.FC = () => {
 
   useEffect(() => {
     const init = async () => {
-      const coordinates = await getCurrentCoordinates();
-      const lat = coordinates.coords.latitude;
-      const lng = coordinates.coords.longitude;
+      // const coordinates = await getCurrentCoordinates();
+      // const lat = coordinates.coords.latitude;
+      // const lng = coordinates.coords.longitude;
 
-      if (lat && lng) {
-        setCurrentPosition({ lat, lng });
-        map?.moveCamera({
-          center: { lat, lng },
-          zoom: 16,
-        });
-      }
+      // if (lat && lng) {
+      //   setCurrentPosition({ lat, lng });
+      //   map?.moveCamera({
+      //     center: { lat, lng },
+      //     zoom: 16,
+      //   });
+      // }
 
       const apiMarkers = await apiLoadMarkers();
       setMarkers(apiMarkers);
