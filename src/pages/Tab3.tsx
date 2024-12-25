@@ -1,5 +1,4 @@
 import {
-  IonButton,
   IonContent,
   IonFab,
   IonFabButton,
@@ -22,14 +21,13 @@ import {
   MarkerDetail,
 } from "./data";
 import MarkerInfo from "../components/MarkerInfo";
-import { navigate, scan } from "ionicons/icons";
+import { scan } from "ionicons/icons";
 
 import {
   APIProvider,
   Map,
   AdvancedMarker,
   Pin,
-  useMap,
 } from "@vis.gl/react-google-maps";
 import NavigateButton from "../components/NavigateButton";
 
@@ -161,9 +159,9 @@ const Tab3: React.FC = () => {
           </Map>
 
           <IonFab vertical="bottom" horizontal="center" slot="fixed">
-            <IonButton className="button" onClick={() => {}} shape="round">
+            <IonFabButton className="button" onClick={() => {}}>
               <IonIcon size="large" icon={scan} />
-            </IonButton>
+            </IonFabButton>
           </IonFab>
 
           <NavigateButton
