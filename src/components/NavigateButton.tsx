@@ -12,13 +12,14 @@ const NavigateButton: React.FC<Props> = ({ mapId, getCurrentCoordinates }) => {
   const map = useMap(mapId);
 
   const centerToCurrentLocation = async () => {
-    const coordinates = await getCurrentCoordinates();
+    const center = map?.getCenter();
+    const lat = center?.lat();
+    const lng = center?.lng();
+
+    if (!lat || !lng) return;
 
     map?.moveCamera({
-      center: {
-        lat: coordinates.coords.latitude,
-        lng: coordinates.coords.longitude,
-      },
+      center: { lat, lng },
       zoom: 16,
     });
   };
