@@ -71,10 +71,10 @@ const App: React.FC = () => (
             <IonIcon aria-hidden="true" icon={compass} />
             <IonLabel>GPS</IonLabel>
           </IonTabButton>
-          {/* <IonTabButton tab="tab1" href="/tab1">
+          <IonTabButton tab="tab1" href="/tab1">
             <IonIcon aria-hidden="true" icon={location} />
             <IonLabel>GPS</IonLabel>
-          </IonTabButton> */}
+          </IonTabButton>
           <IonTabButton tab="tab2" href="/tab2">
             <IonIcon aria-hidden="true" icon={image} />
             <IonLabel>Photos</IonLabel>
