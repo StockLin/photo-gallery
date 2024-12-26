@@ -50,11 +50,11 @@ const Tab1: React.FC = () => {
   };
 
   const getCurrentCoordinates = async () => {
-    const permResult = await Geolocation.checkPermissions();
+    // const permResult = await Geolocation.checkPermissions();
 
-    if (permResult.location === "prompt") {
-      await Geolocation.requestPermissions();
-    }
+    // if (permResult.location === "prompt") {
+    //   await Geolocation.requestPermissions();
+    // }
 
     const coordinates = await Geolocation.getCurrentPosition({
       enableHighAccuracy: true,
