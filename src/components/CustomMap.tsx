@@ -68,11 +68,11 @@ const CustomMap: React.FC = () => {
   // load current position
   const getCurrentCoordinates = async () => {
     try {
-      const permResult = await Geolocation.checkPermissions();
+      // const permResult = await Geolocation.checkPermissions();
 
-      if (permResult.location === "prompt") {
-        await Geolocation.requestPermissions();
-      }
+      // if (permResult.location === "prompt") {
+      //   await Geolocation.requestPermissions();
+      // }
 
       const coordinates = await Geolocation.getCurrentPosition({
         enableHighAccuracy: true,
