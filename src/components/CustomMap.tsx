@@ -28,9 +28,6 @@ import {
   useMap,
   useApiIsLoaded,
 } from "@vis.gl/react-google-maps";
-import NavigateButton from "./NavigateButton";
-
-const API_KEY = import.meta.env.VITE_MAP_API_KEY ?? "";
 
 // v initial map
 // v load markers data

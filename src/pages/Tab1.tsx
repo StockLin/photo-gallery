@@ -1,21 +1,24 @@
 import {
   IonButton,
+  IonCol,
   IonContent,
   IonFab,
   IonFabButton,
   IonIcon,
+  IonLabel,
   IonPage,
+  IonRow,
   useIonModal,
   useIonViewWillEnter,
 } from "@ionic/react";
 import "./Tab3.css";
 import { useRef, useState } from "react";
 import { GoogleMap } from "@capacitor/google-maps";
-import { Geolocation } from "@capacitor/geolocation";
+import { Geolocation, Position } from "@capacitor/geolocation";
 import { apiLoadMarkers, CustomMarker, mockMarkers } from "./data";
 import { MapClickCallbackData } from "@capacitor/google-maps/dist/typings/definitions";
 import MarkerInfo from "../components/MarkerInfo";
-import { navigate, scan } from "ionicons/icons";
+import { location, navigate, scan, trash } from "ionicons/icons";
 
 const API_KEY = import.meta.env.VITE_MAP_API_KEY ?? "";
 
@@ -25,6 +28,7 @@ const API_KEY = import.meta.env.VITE_MAP_API_KEY ?? "";
 // v add click event
 
 const Tab1: React.FC = () => {
+  const [currentPosition, setCurrentPosition] = useState<Position>();
   const mapRef = useRef<HTMLElement>();
   const mapInstance = useRef<GoogleMap>();
 
@@ -135,14 +139,46 @@ const Tab1: React.FC = () => {
   return (
     <IonPage>
       <IonContent fullscreen>
-        <capacitor-google-map
+        {/* <capacitor-google-map
           ref={mapRef}
           style={{
             display: "block",
             width: "100wh",
             height: "100vh",
           }}
-        />
+        /> */}
+
+        <IonRow>
+          <IonCol size="6">
+            <IonFabButton
+              onClick={async () => {
+                const coords = await getCurrentCoordinates();
+                setCurrentPosition(coords);
+              }}
+            >
+              <IonIcon size="large" icon={location} />
+            </IonFabButton>
+          </IonCol>
+
+          <IonCol size="6">
+            <IonFabButton
+              onClick={async () => {
+                setCurrentPosition(undefined);
+              }}
+            >
+              <IonIcon size="large" icon={trash} />
+            </IonFabButton>
+          </IonCol>
+        </IonRow>
+
+        <IonLabel>
+          <h2 className="ion-margin">
+            LAT: {currentPosition?.coords?.latitude ?? ""}
+          </h2>
+          <h2 className="ion-margin">
+            LNG: {currentPosition?.coords?.longitude ?? ""}
+          </h2>
+        </IonLabel>
 
         <IonFab vertical="bottom" horizontal="center" slot="fixed">
           <IonFabButton onClick={() => {}}>
