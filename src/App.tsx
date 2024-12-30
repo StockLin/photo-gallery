@@ -44,6 +44,7 @@ import "@ionic/react/css/display.css";
 
 /* Theme variables */
 import "./theme/variables.css";
+import ScanPage from "./pages/ScanPage";
 
 setupIonicReact();
 
@@ -52,6 +53,9 @@ const App: React.FC = () => (
     <IonReactRouter>
       <IonTabs>
         <IonRouterOutlet>
+          <Route exact path="/scan">
+            <ScanPage />
+          </Route>
           <Route exact path="/tab1">
             <Tab1 />
           </Route>
@@ -65,21 +69,17 @@ const App: React.FC = () => (
             <Redirect to="/tab3" />
           </Route>
         </IonRouterOutlet>
-
+        {/* 
         <IonTabBar slot="bottom">
           <IonTabButton tab="tab3" href="/tab3">
             <IonIcon aria-hidden="true" icon={compass} />
             <IonLabel>GPS</IonLabel>
           </IonTabButton>
-          {/* <IonTabButton tab="tab1" href="/tab1">
-            <IonIcon aria-hidden="true" icon={location} />
-            <IonLabel>GPS</IonLabel>
-          </IonTabButton> */}
           <IonTabButton tab="tab2" href="/tab2">
             <IonIcon aria-hidden="true" icon={image} />
             <IonLabel>Photos</IonLabel>
           </IonTabButton>
-        </IonTabBar>
+        </IonTabBar> */}
       </IonTabs>
     </IonReactRouter>
   </IonApp>

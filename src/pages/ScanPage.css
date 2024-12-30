@@ -1,0 +1,7 @@
+.box {
+  @apply flex justify-center items-center;
+}
+
+.video-box {
+  @apply object-cover;
+}
