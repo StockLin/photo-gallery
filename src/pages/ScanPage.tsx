@@ -1,63 +1,51 @@
-import { IonContent, IonHeader, IonPage } from "@ionic/react";
-import React, { useState } from "react";
-import {
-  Scanner,
-  IScannerClassNames,
-  IDetectedBarcode,
-  TrackFunction,
-} from "@yudiel/react-qr-scanner";
+import { IonContent, IonPage } from "@ionic/react";
+import React, { useEffect, useRef, useState } from "react";
 import "./ScanPage.css";
 import { useHistory } from "react-router";
+import ScanBox from "../components/ScanBox";
 
 const ScanPage: React.FC = () => {
   const history = useHistory();
-  const [scanValues, setScanValues] = useState<IDetectedBarcode[]>();
+  const [scanValues, setScanValues] = useState<any>();
+  const [paused, setPaused] = useState(false);
 
-  const handeScan = (result: IDetectedBarcode[]) => {
-    setScanValues(result);
-  };
+  useEffect(() => {
+    const onScanSuccess = (decodedText: string, decodedResult: any) => {
+      setScanValues(decodedText);
+    };
+
+    const onScanFailure = () => {};
+
+    const init = async () => {};
+
+    init();
+
+    return () => setPaused(true);
+  }, []);
 
   return (
     <IonPage>
       <IonContent fullscreen>
-        <div className="relative border-2 w-full h-full overflow-hidden">
+        <div className="relative border-2 w-screen h-screen overflow-hidden">
           <div
-            className=" absolute top-4 left-4 z-50"
-            onClick={() => history.push("/tab3")}
+            className=" absolute top-4 left-4 z-50 text-gray-100 text-xl font-medium"
+            onClick={() => {
+              history.push("/tab3");
+              setPaused(true);
+            }}
           >
-            back
+            BACK
           </div>
 
-          <Scanner
-            classNames={{
-              container: "box",
-              video: "video-box",
-            }}
-            styles={{
-              finderBorder: 0.2,
-            }}
-            onScan={handeScan}
-            scanDelay={1000}
-            components={{
-              // tracker: TrackFunction,
-              audio: false,
-              onOff: false,
-              torch: false,
-              zoom: true,
-              finder: false,
-            }}
-          >
-            <div className="flex flex-col gap-2">
-              {scanValues?.map((scan, index) => (
-                <h1 className="text-red-500" key={index}>
-                  {JSON.stringify(scan?.rawValue)}
-                </h1>
-              ))}
-            </div>
-            <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
-              <div className="border-2 border-gray-600 w-[240px] h-[240px]" />
-            </div>
-          </Scanner>
+          {/* <video ref={ref} className="w-full h-full object-cover" /> */}
+
+          {/* <div className="flex justify-center items-center w-[300px] h-[300px]"> */}
+          <ScanBox />
+          {/* </div> */}
+
+          {/* <div className=" absolute top-[80%] left-1/2 -translate-x-1/2  text-white text-xl font-medium">
+            {scanValues && JSON.stringify(scanValues)}
+          </div> */}
         </div>
       </IonContent>
     </IonPage>

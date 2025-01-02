@@ -150,7 +150,8 @@ const CustomMap: React.FC = () => {
   };
 
   const handleScan = async () => {
-    history.push("/scan");
+    history.push(`/scan?now=${Date.now()}`);
+    // const scanResult = await scanQRCode();
   };
 
   if (!isMapLoaded) {
