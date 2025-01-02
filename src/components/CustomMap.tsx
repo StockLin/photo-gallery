@@ -28,6 +28,9 @@ import {
   useMap,
   useApiIsLoaded,
 } from "@vis.gl/react-google-maps";
+import useScan from "../hooks/useScan";
+import ScanBox from "./ScanBox";
+import { useHistory } from "react-router";
 
 // v initial map
 // v load markers data
@@ -45,6 +48,9 @@ const CustomMap: React.FC = () => {
   const isMapLoaded = useApiIsLoaded();
   const [currentPosition, setCurrentPosition] = useState<any>(initalCenter);
   const [markers, setMarkers] = useState<CustomMarker[]>([]);
+  const { scanQRCode, scanResult } = useScan();
+
+  const history = useHistory();
 
   const [selectedMarker, setSelectedMarker] = useState<CustomMarker | null>(
     null
@@ -58,6 +64,10 @@ const CustomMap: React.FC = () => {
     dismiss: () => dismiss(),
   });
 
+  const [presentScan, dismissScan] = useIonModal(ScanBox, {
+    dismiss: () => dismissScan(),
+  });
+
   const modalOptions = {
     initialBreakpoint: 0.25,
     breakpoints: [0, 0.25, 0.5, 0.75],
@@ -65,10 +75,17 @@ const CustomMap: React.FC = () => {
     onDidDismiss: () => dismiss(),
   };
 
+  const scanModalOptions = {
+    initialBreakpoint: 1,
+    breakpoints: [0, 1],
+    backdropBreakpoint: 0,
+    onDidDismiss: () => dismissScan(),
+  };
+
   // load current position
   const getCurrentCoordinates = async () => {
     try {
-      // const permResult = await Geolocation.checkPermissions();
+      const permResult = await Geolocation.checkPermissions();
 
       // if (permResult.location === "prompt") {
       //   await Geolocation.requestPermissions();
@@ -90,17 +107,17 @@ const CustomMap: React.FC = () => {
 
   useEffect(() => {
     const init = async () => {
-      // const coordinates = await getCurrentCoordinates();
-      // const lat = coordinates.coords.latitude;
-      // const lng = coordinates.coords.longitude;
+      const coordinates = await getCurrentCoordinates();
+      const lat = coordinates.coords.latitude;
+      const lng = coordinates.coords.longitude;
 
-      // if (lat && lng) {
-      //   setCurrentPosition({ lat, lng });
-      //   map?.moveCamera({
-      //     center: { lat, lng },
-      //     zoom: 16,
-      //   });
-      // }
+      if (lat && lng) {
+        setCurrentPosition({ lat, lng });
+        map?.moveCamera({
+          center: { lat, lng },
+          zoom: 16,
+        });
+      }
 
       const apiMarkers = await apiLoadMarkers();
       setMarkers(apiMarkers);
@@ -130,6 +147,11 @@ const CustomMap: React.FC = () => {
       center: { lat, lng },
       zoom: 16,
     });
+  };
+
+  const handleScan = async () => {
+    history.push(`/scan?now=${Date.now()}`);
+    // const scanResult = await scanQRCode();
   };
 
   if (!isMapLoaded) {
@@ -163,6 +185,8 @@ const CustomMap: React.FC = () => {
           </IonToolbar>
         </IonFab>
 
+        <h1 className="text-3xl font-bold text-orange-500">GPS</h1>
+
         <Map
           id={MAP_ID}
           defaultCenter={currentPosition}
@@ -188,12 +212,7 @@ const CustomMap: React.FC = () => {
         </Map>
 
         <IonFab vertical="bottom" horizontal="center" slot="fixed">
-          <IonFabButton
-            className="button"
-            onClick={() => {
-              console.log("map...", map);
-            }}
-          >
+          <IonFabButton className="button" onClick={handleScan}>
             <IonIcon size="large" icon={scan} />
           </IonFabButton>
         </IonFab>
