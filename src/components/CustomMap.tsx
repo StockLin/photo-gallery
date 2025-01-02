@@ -45,10 +45,10 @@ const initalCenter = {
 const CustomMap: React.FC = () => {
   const MAP_ID = "map01";
   const map = useMap(MAP_ID);
-  const isMapLoaded = useApiIsLoaded();
+  const [isLoading, setIsLoading] = useState(true);
+  // const isMapLoaded = useApiIsLoaded();
   const [currentPosition, setCurrentPosition] = useState<any>(initalCenter);
   const [markers, setMarkers] = useState<CustomMarker[]>([]);
-  const { scanQRCode, scanResult } = useScan();
 
   const history = useHistory();
 
@@ -73,13 +73,6 @@ const CustomMap: React.FC = () => {
     breakpoints: [0, 0.25, 0.5, 0.75],
     backdropBreakpoint: 0.25,
     onDidDismiss: () => dismiss(),
-  };
-
-  const scanModalOptions = {
-    initialBreakpoint: 1,
-    breakpoints: [0, 1],
-    backdropBreakpoint: 0,
-    onDidDismiss: () => dismissScan(),
   };
 
   // load current position
@@ -107,26 +100,33 @@ const CustomMap: React.FC = () => {
 
   useEffect(() => {
     const init = async () => {
-      const coordinates = await getCurrentCoordinates();
-      const lat = coordinates.coords.latitude;
-      const lng = coordinates.coords.longitude;
+      try {
+        const coordinates = await getCurrentCoordinates();
+        const lat = coordinates.coords.latitude;
+        const lng = coordinates.coords.longitude;
 
-      if (lat && lng) {
-        setCurrentPosition({ lat, lng });
-        map?.moveCamera({
-          center: { lat, lng },
-          zoom: 16,
-        });
+        if (lat && lng) {
+          setCurrentPosition({ lat, lng });
+          map?.moveCamera({
+            center: { lat, lng },
+            zoom: 16,
+          });
+        }
+
+        const apiMarkers = await apiLoadMarkers();
+        setMarkers(apiMarkers);
+      } catch (error) {
+        console.error("Error loading markers", error);
+      } finally {
+        setIsLoading(false);
       }
-
-      const apiMarkers = await apiLoadMarkers();
-      setMarkers(apiMarkers);
     };
 
-    if (isMapLoaded && map) {
-      init();
-    }
-  }, [isMapLoaded, map]);
+    // if (isMapLoaded && map) {
+    //   init();
+    // }
+    init();
+  }, [map]);
 
   const handleMarkerClick = async (marker: CustomMarker) => {
     const detail = await apiLoadMarkerById(marker.id);
@@ -154,7 +154,7 @@ const CustomMap: React.FC = () => {
     // const scanResult = await scanQRCode();
   };
 
-  if (!isMapLoaded) {
+  if (isLoading) {
     return (
       <IonPage>
         <IonContent fullscreen>
