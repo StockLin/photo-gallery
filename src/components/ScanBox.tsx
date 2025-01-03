@@ -1,10 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
-import { IonButton, IonContent, IonToolbar } from "@ionic/react";
+import { IonButton } from "@ionic/react";
 import {
   Html5Qrcode,
-  Html5QrcodeFullConfig,
   Html5QrcodeSupportedFormats,
-  Html5QrcodeScanner,
+  Html5QrcodeCameraScanConfig,
 } from "html5-qrcode";
 import useCamera from "../hooks/useCamera";
 
@@ -14,19 +13,31 @@ interface Props {
 }
 
 const ScanBox: React.FC<Props> = ({ onScan, dismiss }) => {
-  const { checkPermissions, requestPermissions } = useCamera();
+  const {
+    checkPermissions,
+    requestPermissions,
+    checkAndRequestCameraPermissions,
+  } = useCamera();
   const scannerRef = useRef<Html5Qrcode>();
   const [isScanning, setIsScanning] = useState(false);
   const [scanResult, setScanResult] = useState("");
 
   useEffect(() => {
     const init = async () => {
-      const hasPermission = await checkPermissions();
-      if (!hasPermission) {
-        await requestPermissions();
-      }
+      // const hasPermission = await checkAndRequestCameraPermissions();
+
+      // console.log("hasPermission", hasPermission);
+      // if (!hasPermission) {
+      //   await requestPermissions();
+      // }
 
       if (!scannerRef?.current) {
+        // const devices = await Html5Qrcode.getCameras();
+
+        // if (devices && devices.length > 0) {
+        //   console.log("devices", devices);
+        // }
+
         scannerRef.current = new Html5Qrcode("reader", {
           verbose: false,
           formatsToSupport: [Html5QrcodeSupportedFormats.QR_CODE],
@@ -35,26 +46,36 @@ const ScanBox: React.FC<Props> = ({ onScan, dismiss }) => {
     };
 
     init();
-
-    return () => {
-      if (scannerRef?.current) {
-        scannerRef.current.stop().catch(console.error);
-      }
-    };
   }, []);
+
+  const onScanSuccess = (decodedText: string, decodedResult: any) => {
+    console.log("onScanSuccess", decodedText);
+    setScanResult(decodedText);
+    stopScanning();
+  };
+
+  const onScanFailure = (error: any) => {
+    console.error("onScanFailure", error);
+  };
 
   const startScanning = async () => {
     try {
-      const config = { fps: 10, qrbox: 250 };
+      const scannerElement = document.getElementById("reader");
 
-      const onScanSuccess = (decodedText: string, decodedResult: any) => {
-        console.log("onScanSuccess", decodedText);
-        setScanResult(decodedText);
-        stopScanning();
-      };
+      if (!scannerElement) {
+        console.error("scannerElement not provide");
+        return;
+      }
 
-      const onScanFailure = (error: any) => {
-        console.error("onScanFailure", error);
+      const config: Html5QrcodeCameraScanConfig = {
+        fps: 30,
+        qrbox: scannerElement.getBoundingClientRect().width * (9 / 16) - 10,
+        aspectRatio: 16 / 9,
+        videoConstraints: {
+          // width: { ideal: 1280 },
+          // height: { ideal: 720 },
+          backgroundBlur: true,
+        },
       };
 
       if (scannerRef?.current) {
@@ -91,11 +112,20 @@ const ScanBox: React.FC<Props> = ({ onScan, dismiss }) => {
         className="w-screen h-screen bg-gray-100 rounded-lg overflow-hidden"
       />
 
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2"></div>
+      <div className="absolute top-8 left-1/2 transform -translate-x-1/2"></div>
 
-      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
+      <div className="absolute top-4 left-1/2 transform -translate-x-1/2">
         <div className="flex flex-col gap-4">
           {scanResult}
+
+          <IonButton
+            className="bg-rose-500"
+            onClick={async () => {
+              await navigator.mediaDevices.getUserMedia({ video: true });
+            }}
+          >
+            Request Permission
+          </IonButton>
 
           {isScanning ? (
             <IonButton className="bg-rose-500" onClick={stopScanning}>
