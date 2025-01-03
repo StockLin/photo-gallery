@@ -4,6 +4,7 @@ import {
   Html5Qrcode,
   Html5QrcodeSupportedFormats,
   Html5QrcodeCameraScanConfig,
+  CameraDevice,
 } from "html5-qrcode";
 import useCamera from "../hooks/useCamera";
 
@@ -21,6 +22,7 @@ const ScanBox: React.FC<Props> = ({ onScan, dismiss }) => {
   const scannerRef = useRef<Html5Qrcode>();
   const [isScanning, setIsScanning] = useState(false);
   const [scanResult, setScanResult] = useState("");
+  const [devices, setDevices] = useState<CameraDevice[]>([]);
 
   useEffect(() => {
     const init = async () => {
@@ -32,12 +34,6 @@ const ScanBox: React.FC<Props> = ({ onScan, dismiss }) => {
       // }
 
       if (!scannerRef?.current) {
-        // const devices = await Html5Qrcode.getCameras();
-
-        // if (devices && devices.length > 0) {
-        //   console.log("devices", devices);
-        // }
-
         scannerRef.current = new Html5Qrcode("reader", {
           verbose: false,
           formatsToSupport: [Html5QrcodeSupportedFormats.QR_CODE],
@@ -60,6 +56,13 @@ const ScanBox: React.FC<Props> = ({ onScan, dismiss }) => {
 
   const startScanning = async () => {
     try {
+      const devices = await Html5Qrcode.getCameras();
+
+      if (devices && devices.length > 0) {
+        console.log("devices", devices);
+        setDevices(devices ?? []);
+      }
+
       const scannerElement = document.getElementById("reader");
 
       if (!scannerElement) {
@@ -70,10 +73,11 @@ const ScanBox: React.FC<Props> = ({ onScan, dismiss }) => {
       const config: Html5QrcodeCameraScanConfig = {
         fps: 30,
         qrbox: scannerElement.getBoundingClientRect().width * (9 / 16) - 10,
-        aspectRatio: 16 / 9,
+        // aspectRatio: 16 / 9,
         videoConstraints: {
           // width: { ideal: 1280 },
           // height: { ideal: 720 },
+          facingMode: "environment",
           backgroundBlur: true,
         },
       };
@@ -109,28 +113,23 @@ const ScanBox: React.FC<Props> = ({ onScan, dismiss }) => {
     <div className=" relative flex flex-col gap-4">
       <div
         id="reader"
-        className="w-screen h-screen bg-gray-100 rounded-lg overflow-hidden"
+        className="w-screen h-screen bg-gray-100 object-cover rounded-lg overflow-hidden"
       />
-
-      <div className="absolute top-8 left-1/2 transform -translate-x-1/2"></div>
 
       <div className="absolute top-4 left-1/2 transform -translate-x-1/2">
         <div className="flex flex-col gap-4">
           {scanResult}
 
           <IonButton
-            className="bg-rose-500"
-            onClick={async () => {
-              await navigator.mediaDevices.getUserMedia({ video: true });
-            }}
+          // onClick={async () => {
+          //   await navigator.mediaDevices.getUserMedia({ video: true });
+          // }}
           >
-            Request Permission
+            Device ({devices?.length})
           </IonButton>
 
           {isScanning ? (
-            <IonButton className="bg-rose-500" onClick={stopScanning}>
-              STOP
-            </IonButton>
+            <IonButton onClick={stopScanning}>STOP</IonButton>
           ) : (
             <IonButton onClick={startScanning}>START</IonButton>
           )}
