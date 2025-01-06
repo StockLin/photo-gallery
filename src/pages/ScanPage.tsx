@@ -11,9 +11,9 @@ const ScanPage: React.FC = () => {
   return (
     <IonPage>
       <IonContent fullscreen>
-        <div className="relative border-2 w-screen h-screen overflow-hidden">
+        <div className="relative border-2 !w-full !h-screen">
           <div
-            className=" absolute top-4 left-4 z-50 text-gray-100 text-xl font-medium"
+            className=" absolute top-4 left-4 z-50 text-gray-500 text-xl font-medium"
             onClick={() => history.push("/tab3")}
           >
             BACK
