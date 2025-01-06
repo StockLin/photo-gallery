@@ -1,5 +1,7 @@
+import "./ScanBox.css";
+
 import React, { useEffect, useRef, useState } from "react";
-import { IonButton } from "@ionic/react";
+import { IonButton, IonContent } from "@ionic/react";
 import {
   Html5Qrcode,
   Html5QrcodeSupportedFormats,
@@ -24,8 +26,29 @@ const ScanBox: React.FC<Props> = ({ onScan, dismiss }) => {
   const [scanResult, setScanResult] = useState("");
   const [devices, setDevices] = useState<CameraDevice[]>([]);
 
+  const [scannerDimensions, setScannerDimensions] = useState({
+    width: 250,
+    height: 250,
+  });
+  const containerRef = useRef(null);
+
   useEffect(() => {
+    // Function to calculate scanner dimensions
+    // const updateScannerDimensions = () => {
+    //   if (containerRef.current) {
+    //     const smallerDimension =
+    //       Math.min(window.innerWidth, window.innerHeight) * 0.7;
+    //     setScannerDimensions({
+    //       width: smallerDimension,
+    //       height: smallerDimension,
+    //     });
+    //   }
+    // };
+
     const init = async () => {
+      // Initial calculation
+      // updateScannerDimensions();
+
       // const hasPermission = await checkAndRequestCameraPermissions();
 
       // console.log("hasPermission", hasPermission);
@@ -34,12 +57,19 @@ const ScanBox: React.FC<Props> = ({ onScan, dismiss }) => {
       // }
 
       if (!scannerRef?.current) {
-        scannerRef.current = new Html5Qrcode("reader", {
-          verbose: false,
-          formatsToSupport: [Html5QrcodeSupportedFormats.QR_CODE],
-        });
+        scannerRef.current = new Html5Qrcode(
+          "reader",
+          false
+          //   {
+          //   verbose: false,
+          //   formatsToSupport: [Html5QrcodeSupportedFormats.QR_CODE],
+          // }
+        );
       }
     };
+
+    // Add resize listener
+    // window.addEventListener("resize", updateScannerDimensions);
 
     init();
   }, []);
@@ -51,7 +81,7 @@ const ScanBox: React.FC<Props> = ({ onScan, dismiss }) => {
   };
 
   const onScanFailure = (error: any) => {
-    console.error("onScanFailure", error);
+    // console.error("onScanFailure", error);
   };
 
   const startScanning = async () => {
@@ -70,15 +100,28 @@ const ScanBox: React.FC<Props> = ({ onScan, dismiss }) => {
         return;
       }
 
+      console.log(
+        " window.innerHeight / window.innerWidth",
+        window.innerHeight / window.innerWidth,
+        window.innerWidth / window.innerHeight
+      );
+
       const config: Html5QrcodeCameraScanConfig = {
-        fps: 30,
+        fps: 10,
         qrbox: scannerElement.getBoundingClientRect().width * (9 / 16) - 10,
+        // qrbox: {
+        //   width: 250,
+        //   height: 250,
+        // },
+        aspectRatio: window.innerWidth / window.innerHeight,
+
         // aspectRatio: 16 / 9,
         videoConstraints: {
-          // width: { ideal: 1280 },
-          // height: { ideal: 720 },
+          // height: { min: 576, ideal: 1920 },
+          width: window.innerWidth,
+          height: window.innerHeight,
           facingMode: "environment",
-          backgroundBlur: true,
+          // backgroundBlur: true,
         },
       };
 
@@ -87,8 +130,8 @@ const ScanBox: React.FC<Props> = ({ onScan, dismiss }) => {
           { facingMode: "environment" },
           config,
           onScanSuccess,
-          // onScanFailure
-          undefined
+          onScanFailure
+          // undefined
         );
 
         setIsScanning(true);
@@ -110,23 +153,23 @@ const ScanBox: React.FC<Props> = ({ onScan, dismiss }) => {
   };
 
   return (
-    <div className=" relative flex flex-col gap-4">
-      <div
-        id="reader"
-        className="w-screen h-screen bg-gray-100 object-cover rounded-lg overflow-hidden"
-      />
+    <div
+      className="!relative !w-full !h-full flex items-center"
+      ref={containerRef}
+    >
+      {/* <div className="w-full h-full bg-red-300"></div> */}
+      <div id="reader" className="w-full bg-slate-500" />
+      {/* Corner markers */}
+      {/* <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 z-10">
+        <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-white" />
+        <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-white" />
+        <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-white" />
+        <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-white" />
+      </div> */}
 
-      <div className="absolute top-4 left-1/2 transform -translate-x-1/2">
+      <div className="absolute w-full h-hull top-10 left-1/2 transform -translate-x-1/2">
         <div className="flex flex-col gap-4">
-          {scanResult}
-
-          <IonButton
-          // onClick={async () => {
-          //   await navigator.mediaDevices.getUserMedia({ video: true });
-          // }}
-          >
-            Device ({devices?.length})
-          </IonButton>
+          <IonButton>Device ({devices?.length})</IonButton>
 
           {isScanning ? (
             <IonButton onClick={stopScanning}>STOP</IonButton>
@@ -134,6 +177,10 @@ const ScanBox: React.FC<Props> = ({ onScan, dismiss }) => {
             <IonButton onClick={startScanning}>START</IonButton>
           )}
         </div>
+      </div>
+
+      <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2">
+        {scanResult}
       </div>
     </div>
   );
