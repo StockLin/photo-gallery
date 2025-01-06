@@ -1,0 +1,27 @@
+#reader {
+  /* width: 100% !important; */
+  /* height: 100% !important; */
+  /* position: absolute !important;
+  top: 0;
+  left: 0; */
+}
+
+#reader video {
+  /* width: 100% !important;
+  height: 100% !important; */
+  /* object-fit: cover !important; */
+}
+
+/* #qr-shaded-region {
+  display: none !important;
+} */
+
+/*  this id not found but i fount qr-shaded-region id */
+/* #qr-reader__scan_region {
+  display: none !important;
+}
+
+/* this id not found */
+/* #qr-reader__dashboard {
+  display: none !important;
+} */
