@@ -158,7 +158,8 @@ const ScanBox: React.FC<Props> = ({ onScan, dismiss }) => {
       ref={containerRef}
     >
       {/* <div className="w-full h-full bg-red-300"></div> */}
-      <div id="reader" className="w-full bg-slate-500" />
+      <div id="reader" className="w-full h-full bg-slate-300" />
+
       {/* Corner markers */}
       {/* <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 z-10">
         <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-white" />
@@ -167,9 +168,13 @@ const ScanBox: React.FC<Props> = ({ onScan, dismiss }) => {
         <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-white" />
       </div> */}
 
-      <div className="absolute w-full h-hull top-10 left-1/2 transform -translate-x-1/2">
+      <div className="absolute top-10 left-1/2 transform -translate-x-1/2"></div>
+
+      <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2">
         <div className="flex flex-col gap-4">
-          <IonButton>Device ({devices?.length})</IonButton>
+          {scanResult}
+
+          <h3>Device ({devices?.length})</h3>
 
           {isScanning ? (
             <IonButton onClick={stopScanning}>STOP</IonButton>
@@ -177,10 +182,6 @@ const ScanBox: React.FC<Props> = ({ onScan, dismiss }) => {
             <IonButton onClick={startScanning}>START</IonButton>
           )}
         </div>
-      </div>
-
-      <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2">
-        {scanResult}
       </div>
     </div>
   );
