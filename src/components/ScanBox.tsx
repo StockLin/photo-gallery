@@ -89,7 +89,6 @@ const ScanBox: React.FC<Props> = ({ onScan, dismiss }) => {
       const devices = await Html5Qrcode.getCameras();
 
       if (devices && devices.length > 0) {
-        console.log("devices", devices);
         setDevices(devices ?? []);
       }
 
@@ -99,12 +98,6 @@ const ScanBox: React.FC<Props> = ({ onScan, dismiss }) => {
         console.error("scannerElement not provide");
         return;
       }
-
-      console.log(
-        " window.innerHeight / window.innerWidth",
-        window.innerHeight / window.innerWidth,
-        window.innerWidth / window.innerHeight
-      );
 
       const config: Html5QrcodeCameraScanConfig = {
         fps: 10,
@@ -158,7 +151,7 @@ const ScanBox: React.FC<Props> = ({ onScan, dismiss }) => {
       ref={containerRef}
     >
       {/* <div className="w-full h-full bg-red-300"></div> */}
-      <div id="reader" className="w-full h-full bg-slate-300" />
+      <div id="reader" className="w-full bg-slate-300" />
 
       {/* Corner markers */}
       {/* <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 z-10">
@@ -175,6 +168,8 @@ const ScanBox: React.FC<Props> = ({ onScan, dismiss }) => {
           {scanResult}
 
           <h3>Device ({devices?.length})</h3>
+          <p>innerWidth {window?.innerWidth}</p>
+          <p>innerHeight {window?.innerHeight}</p>
 
           {isScanning ? (
             <IonButton onClick={stopScanning}>STOP</IonButton>
