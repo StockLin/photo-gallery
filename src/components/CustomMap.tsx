@@ -185,7 +185,7 @@ const CustomMap: React.FC = () => {
           </IonToolbar>
         </IonFab>
 
-        <h1 className="text-3xl font-bold text-orange-500">GPS</h1>
+        {/* <h1 className="text-3xl font-bold text-orange-500">GPS</h1> */}
 
         <Map
           id={MAP_ID}

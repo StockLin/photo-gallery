@@ -10,7 +10,7 @@ import {
   setupIonicReact,
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
-import { image, location, compass } from "ionicons/icons";
+import { image, location, compass, pencil } from "ionicons/icons";
 import Tab1 from "./pages/Tab1";
 import Tab2 from "./pages/Tab2";
 import Tab3 from "./pages/Tab3";
@@ -45,6 +45,7 @@ import "@ionic/react/css/display.css";
 /* Theme variables */
 import "./theme/variables.css";
 import ScanPage from "./pages/ScanPage";
+import SignaturePage from "./pages/SignaturePage";
 
 setupIonicReact();
 
@@ -65,11 +66,14 @@ const App: React.FC = () => (
           <Route path="/tab3">
             <Tab3 />
           </Route>
+          <Route path="/signature">
+            <SignaturePage />
+          </Route>
           <Route exact path="/">
             <Redirect to="/tab3" />
           </Route>
         </IonRouterOutlet>
-        {/* 
+
         <IonTabBar slot="bottom">
           <IonTabButton tab="tab3" href="/tab3">
             <IonIcon aria-hidden="true" icon={compass} />
@@ -77,9 +81,13 @@ const App: React.FC = () => (
           </IonTabButton>
           <IonTabButton tab="tab2" href="/tab2">
             <IonIcon aria-hidden="true" icon={image} />
-            <IonLabel>Photos</IonLabel>
+            <IonLabel>Camera</IonLabel>
           </IonTabButton>
-        </IonTabBar> */}
+          <IonTabButton tab="signature" href="/signature">
+            <IonIcon aria-hidden="true" icon={pencil} />
+            <IonLabel>Signature</IonLabel>
+          </IonTabButton>
+        </IonTabBar>
       </IonTabs>
     </IonReactRouter>
   </IonApp>
