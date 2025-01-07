@@ -107,15 +107,13 @@ const ScanBox: React.FC<Props> = ({ onScan, dismiss }) => {
         //   height: 250,
         // },
         aspectRatio: window.innerWidth / window.innerHeight,
-
-        // aspectRatio: 16 / 9,
-        videoConstraints: {
-          // height: { min: 576, ideal: 1920 },
-          width: window.innerWidth,
-          height: window.innerHeight,
-          facingMode: "environment",
-          // backgroundBlur: true,
-        },
+        // videoConstraints: {
+        //   // height: { min: 576, ideal: 1920 },
+        //   width: window.innerWidth,
+        //   height: window.innerHeight,
+        //   facingMode: "environment",
+        //   // backgroundBlur: true,
+        // },
       };
 
       if (scannerRef?.current) {
